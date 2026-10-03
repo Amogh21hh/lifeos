@@ -12,7 +12,7 @@ export const GET = api({}, async ({ db, user, params }) => {
   if (params.action === "tools") return { tools: listTools() };
   if (params.action !== "export") throw new ApiError(404, "Unknown action");
   const uid = user.id;
-  const pick = async <T extends { userId: unknown }>(t: T) => db.select().from(t as never).where(eq((t as { userId: never }).userId, uid as never));
+  const pick = async <T extends { userId: unknown }>(t: T) => db.select().from(t as never).where(eq((t as unknown as { userId: never }).userId, uid as never));
   const data = {
     exportedAt: new Date().toISOString(),
     user: (await db.select({ id: s.users.id, email: s.users.email, name: s.users.name, headline: s.users.headline, createdAt: s.users.createdAt }).from(s.users).where(eq(s.users.id, uid)))[0],
