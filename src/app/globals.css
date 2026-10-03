@@ -1,26 +1,186 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * LIFEOS design tokens. Dark is the primary "command center" theme; light is a warm paper theme.
+ * Components only use semantic tokens, never raw colours.
+ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #f6f4ef;
+  --bg-elev: #fffdf9;
+  --bg-sunken: #eeebe4;
+  --bg-hover: #ebe7de;
+  --border: #ddd8cc;
+  --border-strong: #c9c2b2;
+  --text: #1b1a17;
+  --text-muted: #5d594f;
+  --text-faint: #8d877a;
+  --accent: #0e7490;
+  --accent-soft: #0e74901a;
+  --accent-fg: #ffffff;
+  --signal: #b45309;
+  --signal-soft: #b453091a;
+  --danger: #b91c1c;
+  --danger-soft: #b91c1c14;
+  --warning: #b45309;
+  --warning-soft: #f59e0b1f;
+  --success: #15803d;
+  --success-soft: #15803d17;
+  --p-fact: #047857;
+  --p-estimate: #b45309;
+  --p-assumption: #6d28d9;
+  --p-user: #0369a1;
+  --p-ai: #a21caf;
+  --grid: #1b1a170a;
+  --shadow: 0 1px 2px #1b1a170d, 0 8px 24px -12px #1b1a1726;
+  --ring: #0e749066;
+}
+
+.dark {
+  --bg: #07090d;
+  --bg-elev: #0d1117;
+  --bg-sunken: #05070a;
+  --bg-hover: #141a22;
+  --border: #1c232d;
+  --border-strong: #2a3340;
+  --text: #e7ecf2;
+  --text-muted: #9aa6b4;
+  --text-faint: #5f6b79;
+  --accent: #38e1ff;
+  --accent-soft: #38e1ff17;
+  --accent-fg: #021016;
+  --signal: #ffb547;
+  --signal-soft: #ffb54717;
+  --danger: #ff5d6c;
+  --danger-soft: #ff5d6c17;
+  --warning: #ffb547;
+  --warning-soft: #ffb5471a;
+  --success: #3ee08f;
+  --success-soft: #3ee08f17;
+  --p-fact: #3ee08f;
+  --p-estimate: #ffb547;
+  --p-assumption: #b794ff;
+  --p-user: #5cc8ff;
+  --p-ai: #ff7ad9;
+  --grid: #ffffff06;
+  --shadow: 0 1px 0 #ffffff08 inset, 0 12px 32px -16px #000000cc;
+  --ring: #38e1ff55;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--bg);
+  --color-elev: var(--bg-elev);
+  --color-sunken: var(--bg-sunken);
+  --color-hover: var(--bg-hover);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--text);
+  --color-muted: var(--text-muted);
+  --color-faint: var(--text-faint);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-fg: var(--accent-fg);
+  --color-signal: var(--signal);
+  --color-signal-soft: var(--signal-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-warning: var(--warning);
+  --color-warning-soft: var(--warning-soft);
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-p-fact: var(--p-fact);
+  --color-p-estimate: var(--p-estimate);
+  --color-p-assumption: var(--p-assumption);
+  --color-p-user: var(--p-user);
+  --color-p-ai: var(--p-ai);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --shadow-card: var(--shadow);
+  --animate-fade-in: fade-in 0.35s ease-out both;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+  --animate-sweep: sweep 6s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.85);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+@keyframes sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv11";
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+::selection {
+  background: var(--accent-soft);
+}
+
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Thin scrollbars */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+mark.lifeos-hl {
+  background: var(--signal-soft);
+  color: inherit;
+  box-shadow: inset 0 -2px 0 var(--signal);
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
