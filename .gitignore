@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# LIFEOS local data
+/.data
+scratch-*
+.env
+.env.local
+/test-results
+/playwright-report
