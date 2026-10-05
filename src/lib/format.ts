@@ -8,7 +8,7 @@ export function money(value: number | null | undefined, currency = "GBP", opts: 
   const formatted =
     opts.compact && abs >= 1000
       ? new Intl.NumberFormat("en-GB", { style: "currency", currency, notation: "compact", maximumFractionDigits: 1 }).format(abs)
-      : new Intl.NumberFormat("en-GB", { style: "currency", currency, maximumFractionDigits: abs >= 100 ? 0 : 2 }).format(abs);
+      : new Intl.NumberFormat("en-GB", { style: "currency", currency, maximumFractionDigits: abs >= 100 || Number.isInteger(abs) ? 0 : 2 }).format(abs);
   const sign = value < 0 ? "−" : opts.sign && value > 0 ? "+" : "";
   return `${sign}${formatted}`;
 }
