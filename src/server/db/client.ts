@@ -49,7 +49,8 @@ function create(): DbState {
 
   const dataDir = process.env.PGLITE_DIR ?? path.join(process.cwd(), ".data", "pglite");
   if (dataDir !== ":memory:") mkdirSync(dataDir, { recursive: true });
-  const client = new PGlite(dataDir === ":memory:" ? undefined : dataDir, { extensions: { vector } });
+  // Options-object form: passing `undefined` as the first positional arg would drop the extensions.
+  const client = new PGlite({ dataDir: dataDir === ":memory:" ? "memory://" : dataDir, extensions: { vector } });
   const db = drizzlePglite(client, { schema });
   const ready = (async () => {
     await client.waitReady;

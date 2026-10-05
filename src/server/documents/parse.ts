@@ -20,7 +20,7 @@ export const ALLOWED: Record<string, { mime: string; family: "pdf" | "docx" | "x
 export class UploadRejected extends Error {}
 
 export function sanitizeFilename(name: string): string {
-  const base = name.split(/[\/]/).pop() ?? "upload";
+  const base = name.split(/[\\/]/).pop() ?? "upload";
   return base.replace(/[^\w.\- ()]+/g, "_").replace(/^\.+/, "").slice(0, 120) || "upload";
 }
 

@@ -26,7 +26,7 @@ type Rule = { intent: string; re: RegExp; agent: keyof typeof AGENTS; input: (te
 const MONEY = /£|\bspend|\bbuy\b|\bcost|\bpay\b|\bearn|\bincome|\bsalary|\bmoney|\bsaving/i;
 
 export const RULES: Rule[] = [
-  { intent: "search", re: /^(show|find|search|list|get)( me)?.*(everything|all|every)|(related to|connected to|linked to)/i, agent: "ResearchAgent", input: (t) => ({ query: t }), confidence: 0.8 },
+  { intent: "search", re: /^(show|find|search|list|get)( me)?\b.*\b(everything|all|every)\b|\b(related to|connected to|linked to)\b/i, agent: "ResearchAgent", input: (t) => ({ query: t }), confidence: 0.8 },
   { intent: "missing_info", re: /\bmissing information\b|what (info|information) (is|am i) missing/i, agent: "ReflectionAgent", input: (t) => ({ op: "missing_info", text: t }), confidence: 0.92 },
   { intent: "what_am_i_missing", re: /\b(what am i missing|blind spots?|what('?s| is) slipping|overlook)/i, agent: "ReflectionAgent", input: (t) => ({ op: "missing", text: t }), confidence: 0.95 },
   { intent: "what_changed", re: /\b(what('?s| has)? changed|what'?s new|since last (week|month)|recent changes)\b/i, agent: "ReflectionAgent", input: (t) => ({ op: "changes", text: t }), confidence: 0.9 },
@@ -49,7 +49,7 @@ export const RULES: Rule[] = [
   { intent: "analyze_opportunity", re: /\banaly[sz]e (this |the )?(opportunity|role|job|gig)\b|\banaly[sz]e opportunity\b/i, agent: "OpportunityAgent", input: (t) => ({ op: "analyze", name: t.replace(/.*?analy[sz]e (this |the )?(opportunity|role|job|gig)?\s*/i, "").replace(/["“”]/g, "") }), confidence: 0.85 },
   { intent: "opportunity_radar", re: /\b(increase|grow|boost|raise) my (income|earnings|salary|career)|\bways to (earn|make money|grow)|\bhow (can|could) i (earn|make|get|land)|\bopportunit(y|ies) (to|for)\b|\bi want to\b/i, agent: "OpportunityAgent", input: (t) => ({ op: "radar", objective: t }), confidence: 0.85 },
   { intent: "decision", re: /^(should i|which .+ should i|is it worth|would it be better)\b|\bshould i\b/i, agent: "DecisionAgent", input: (t) => ({ question: t }), confidence: 0.85 },
-  { intent: "finance", re: /\b(runway|budget|finances?|cash ?flow|spending|net worth|money situation)\b/i, agent: "FinanceAgent", input: () => ({ op: "overview" }), confidence: 0.8 },
+  { intent: "finance", re: /\b(runway|budget|my finances|financial (position|situation|overview)|cash ?flow|spending|net worth|money situation)\b/i, agent: "FinanceAgent", input: () => ({ op: "overview" }), confidence: 0.8 },
 ];
 
 export function routeByRules(text: string): Route {
