@@ -44,7 +44,7 @@ export default async function WeeklyPage() {
         </ol>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <Section title={`Wins (${r.wins.length})`} icon={<CheckCircle2 className="text-success" />}>
           {r.wins.length ? <ul className="list-disc space-y-1 pl-4 text-fg/90 marker:text-success">{r.wins.map((x, i) => <li key={i}>{x}</li>)}</ul> : <Empty text="No completions logged this week." />}
         </Section>

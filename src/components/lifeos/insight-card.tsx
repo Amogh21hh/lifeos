@@ -92,7 +92,7 @@ export function InsightCard({ item, rank, defaultOpen = false, dismissible = fal
           {item.scoreBreakdown && item.scoreBreakdown.length > 0 && (
             <section>
               <h4 className="mb-2 text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">{item.kind === "action" ? "Leverage = impact × urgency × confidence ÷ effort" : "Score components"}</h4>
-              <div className="grid gap-1.5 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
                 {item.scoreBreakdown.map((b) => (
                   <div key={b.factor} className="flex items-center justify-between gap-2 rounded-lg border border-line bg-elev px-2.5 py-1.5">
                     <div className="min-w-0">
@@ -108,7 +108,7 @@ export function InsightCard({ item, rank, defaultOpen = false, dismissible = fal
             </section>
           )}
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <section>
               <h4 className="mb-2 text-[11px] font-semibold tracking-[0.14em] text-muted uppercase">Assumptions</h4>
               {item.assumptions.length ? (

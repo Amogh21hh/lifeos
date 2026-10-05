@@ -101,7 +101,7 @@ export function DocumentView({ doc, fields, links }: { doc: { id: string; title:
         </Button>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[400px_minmax(0,1fr)]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[400px_minmax(0,1fr)]">
         <div className="space-y-6">
           <Card>
             <CardHeader title={`Extracted fields (${fields.length})`} subtitle="Click a field to see its source in the document" />

@@ -39,7 +39,7 @@ export default async function ProjectsPage() {
       {rows.length === 0 ? (
         <EmptyState icon={<FolderKanban />} title="No projects yet" body="Create a project, or turn an uploaded document into one from the Command Center." />
       ) : (
-        <div className="grid gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           {rows.map(({ p, prog, idle, goal }) => (
             <Link key={p.id} href={`/projects/${p.id}`} className={cn("block rounded-xl border border-line bg-elev p-4 transition-colors hover:border-line-strong", p.status === "done" && "opacity-60")}>
               <div className="flex items-start justify-between gap-3">

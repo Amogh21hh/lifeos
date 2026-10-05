@@ -84,7 +84,7 @@ export function SettingsForms({ isDemo, profile, settings, system, integrations,
       <Card>
         <CardHeader title="AI engine" icon={<Bot />} />
         <div className="space-y-4 px-5 pb-5">
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
             <Info label="Language model" value={system.ai.available ? `${system.ai.engine} · ${system.ai.model}` : "Local reasoning engine"} ok={system.ai.available} />
             <Info label="Embeddings" value={system.embeddings} ok />
             <Info label="Database" value={system.db === "pglite" ? "Embedded Postgres (PGlite + pgvector)" : "PostgreSQL + pgvector"} ok />

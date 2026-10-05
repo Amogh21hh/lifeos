@@ -207,7 +207,7 @@ function NotesPanel({ notes }: { notes: NoteItem[] }) {
         <CreateEntityDialog type="note" title="New note" fields={[{ name: "title", label: "Title", required: true }, { name: "body", label: "Note", type: "textarea", required: true }]} />
         <CreateEntityDialog type="idea" title="New idea" trigger={<Button>New idea</Button>} fields={[{ name: "title", label: "Idea", required: true }, { name: "body", label: "Details", type: "textarea" }]} />
       </div>
-      <div className="grid gap-3 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         {notes.map((n) => (
           <Card key={n.id} className="p-4">
             <div className="flex items-center gap-2">

@@ -31,7 +31,7 @@ export default async function FinancePage() {
         <Stat label="Monthly spend" value={money(f.monthlyExpenses)} hint={`essentials ${money(f.monthlyEssentials)}`} />
         <Stat label="Net worth" value={money(f.netWorth)} hint="incl. investments & assets" />
       </div>
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="min-w-0 space-y-6">
           <FinanceCharts monthly={f.monthly} categories={f.byCategory.slice(0, 8)} />
           <Card>

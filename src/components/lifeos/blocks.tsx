@@ -210,7 +210,7 @@ export function RouteCard({ route, index }: { route: OpportunityRoute; index: nu
               ))}
             </ul>
           </div>
-          <div className="grid gap-3 sm:grid-cols-2">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <div>
               <div className="mb-1 text-[11px] font-semibold tracking-wider text-muted uppercase">Skills</div>
               <div className="flex flex-wrap gap-1">
@@ -341,7 +341,7 @@ function BlockView({ block }: { block: ResultBlock }) {
       return (
         <div>
           <BlockTitle icon={<Gauge />}>{block.title}</BlockTitle>
-          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {block.items.map((m, i) => (
               <div key={i} className="rounded-xl border border-line bg-elev px-3.5 py-2.5">
                 <div className="flex items-center justify-between gap-2">

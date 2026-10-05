@@ -50,7 +50,7 @@ export default async function TodayPage() {
             ))}
           </div>
 
-          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
             <div className="space-y-6">
               <Card>
                 <CardHeader title="Highest-leverage actions" icon={<Zap className="text-accent" />} subtitle="Ranked by impact × urgency × confidence ÷ effort. Open any item to see the full reasoning." />

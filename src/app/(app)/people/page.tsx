@@ -48,7 +48,7 @@ export default async function PeoplePage(props: PageProps<"/people">) {
       {people.length === 0 ? (
         <EmptyState icon={<Users />} title="No people yet" />
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {people.map(({ p, heat, waiting, promises }) => (
             <Link key={p.id} href={`/people/${p.id}`} className="rounded-xl border border-line bg-elev p-4 transition-colors hover:border-line-strong">
               <div className="flex items-center gap-3">

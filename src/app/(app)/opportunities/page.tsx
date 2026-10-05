@@ -55,7 +55,7 @@ export default async function OpportunitiesPage() {
       {opps.length === 0 ? (
         <EmptyState icon={<Briefcase />} title="No opportunities yet" body="Add one manually, upload a job description, or connect the job-board integration in Settings." />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
           {STAGES.map((stage) => {
             const items = opps.filter((x) => stage.statuses.includes(x.o.status)).sort((a, b) => b.fit.score - a.fit.score);
             return (

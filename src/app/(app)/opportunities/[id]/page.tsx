@@ -65,13 +65,13 @@ export default async function OpportunityPage(props: PageProps<"/opportunities/[
         <p className="mt-1 text-sm text-fg">{nextActionFor(w, o.id)}</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-6">
           <Card>
             <CardHeader title={`Fit · ${Math.round(fit.score * 100)}%`} icon={<GraduationCap />} subtitle="Skill coverage weighted by level, plus evidence, warm contacts and visa constraints." />
             <div className="space-y-4 px-5 pb-5">
               <Progress value={fit.score} tone={fit.score >= 0.75 ? "success" : fit.score >= 0.5 ? "accent" : "signal"} />
-              <div className="grid gap-2 sm:grid-cols-2">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {fit.components.map((c) => (
                   <div key={c.factor} className="flex items-center justify-between rounded-lg border border-line bg-sunken px-3 py-2">
                     <div className="min-w-0">

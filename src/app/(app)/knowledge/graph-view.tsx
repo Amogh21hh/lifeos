@@ -79,7 +79,7 @@ export function GraphView({ data, focus }: { data: GraphData; focus: string | nu
   const conns = selected ? data.edges.filter((e) => e.source === selected || e.target === selected) : [];
 
   return (
-    <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_300px]">
+    <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_300px]">
       <div className="h-[640px] overflow-hidden rounded-2xl border border-line bg-sunken">
         <ReactFlow nodes={nodes} edges={edges} fitView minZoom={0.2} onNodeClick={(_, n) => setSelected(n.id === selected ? null : n.id)} onPaneClick={() => setSelected(null)} nodesDraggable proOptions={{ hideAttribution: true }} colorMode="system">
           <Background color="var(--border)" gap={24} />

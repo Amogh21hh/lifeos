@@ -4,12 +4,14 @@ import { defineAgent, runAgent } from "@/server/agents/base";
 import { llmDocumentEnhancer } from "@/server/agents/agents";
 import { ingestDocument, processDocument } from "@/server/documents/pipeline";
 import type { DocumentKind } from "@/server/documents/extract";
+import { validateUpload } from "@/server/documents/parse";
 
 /**
  * Document ingestion runs as a DocumentAgent execution so it appears in AI activity with its
  * LLM usage (when an AI provider is configured) and trace.
  */
 export async function ingestAsAgent(db: DB, userId: string, file: { filename: string; buffer: Buffer; forceKind?: DocumentKind }) {
+  validateUpload(file.filename, file.buffer); // throws UploadRejected (→ HTTP 400) before any processing
   const agent = defineAgent({
     name: "DocumentAgent",
     description: "Extracts structured, source-referenced fields from an uploaded document.",

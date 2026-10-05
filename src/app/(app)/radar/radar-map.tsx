@@ -71,7 +71,7 @@ export function RadarMap({ nodes, edges, potentials }: { nodes: RadarNode[]; edg
   const selPotential = potentials.find((p) => p.id === selected);
 
   return (
-    <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_400px]">
+    <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_400px]">
       <div className="relative overflow-hidden rounded-2xl border border-line bg-sunken">
         <div className="flex flex-wrap items-center gap-1.5 border-b border-line bg-elev/60 px-3 py-2">
           {SECTORS.map((s) => {

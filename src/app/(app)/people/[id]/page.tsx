@@ -46,7 +46,7 @@ export default async function PersonPage(props: PageProps<"/people/[id]">) {
           <EntitySelect type="person" id={p.id} field="strength" value={String(p.strength)} options={["1", "2", "3", "4", "5"]} />
         </div>
       </div>
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
         <div className="space-y-6">
           <Card className="p-5">
             <div className="flex items-center justify-between text-sm">
