@@ -29,6 +29,7 @@ interface Memory {
   lastVerifiedAt: string | null;
   sourceRefType: string | null;
   sourceRefId: string | null;
+  stale: boolean;
 }
 interface NoteItem {
   id: string;
@@ -61,7 +62,7 @@ const SEARCH_EXAMPLES = ["What did I decide about the laptop?", "Show me every d
 
 function SearchPanel({ initialQuery }: { initialQuery: string }) {
   const [q, setQ] = useState(initialQuery);
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy] = useState(!!initialQuery);
   const [res, setRes] = useState<{ results: SearchResult[]; ms: number; parsed: { types: string[]; status: string | null; anchor: string | null } } | null>(null);
   async function run(query: string) {
     if (!query.trim()) return;
@@ -75,9 +76,17 @@ function SearchPanel({ initialQuery }: { initialQuery: string }) {
       setBusy(false);
     }
   }
+  // Run a query passed in the URL (?q=…); state updates happen in the async callback.
   useEffect(() => {
-    if (initialQuery) void run(initialQuery);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (!initialQuery) return;
+    let cancelled = false;
+    apiFetch<NonNullable<typeof res>>(`/api/search?q=${encodeURIComponent(initialQuery)}`)
+      .then((r) => !cancelled && setRes(r))
+      .catch((e: Error) => toast.error(e.message))
+      .finally(() => !cancelled && setBusy(false));
+    return () => {
+      cancelled = true;
+    };
   }, [initialQuery]);
   return (
     <div className="space-y-4">
@@ -152,7 +161,7 @@ function MemoryRow({ m }: { m: Memory }) {
       toast.error((e as Error).message);
     }
   }
-  const stale = !m.lastVerifiedAt || Date.now() - new Date(m.lastVerifiedAt).getTime() > 90 * 86_400_000;
+  const stale = m.stale;
   return (
     <Card className={cn("p-4", m.status !== "active" && "opacity-60")}>
       {editing ? (

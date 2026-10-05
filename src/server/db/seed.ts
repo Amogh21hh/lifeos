@@ -414,7 +414,7 @@ export async function seedDemo(db: DB, now = new Date()): Promise<string> {
     return row.id;
   }
 
-  const decCourse = await decision(
+  await decision(
     {
       title: "Spend £500 on a financial modelling bootcamp?",
       question: "Should I spend £500 on the Corporate Finance Modelling Bootcamp?",
@@ -494,7 +494,7 @@ export async function seedDemo(db: DB, now = new Date()): Promise<string> {
     ],
   );
 
-  const decProject = await decision(
+  await decision(
     {
       title: "Which portfolio project should I prioritise?",
       question: "Which project should I work on for the next two weeks?",

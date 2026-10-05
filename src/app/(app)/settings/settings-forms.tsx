@@ -185,6 +185,8 @@ export function SettingsForms({ isDemo, profile, settings, system, integrations,
       <Card>
         <CardHeader title="Your data" icon={<Database />} />
         <div className="flex flex-wrap gap-2 px-5 pb-5">
+          {/* A file download from an API route, not page navigation — next/link would try to client-route it. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/api/account/export" className="inline-flex h-9 items-center gap-2 rounded-lg border border-line bg-elev px-4 text-sm font-medium text-fg hover:bg-hover">
             <Download className="size-4" /> Export everything (JSON)
           </a>

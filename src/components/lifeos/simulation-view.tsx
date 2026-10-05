@@ -17,8 +17,12 @@ export function SimulationView({ initial }: { initial: SimulationResult }) {
   const [overrides, setOverrides] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(false);
   const first = useRef(true);
-
-  useEffect(() => setResult(initial), [initial]);
+  // Adopt a new initial result when the parent passes one (render-time sync, no effect).
+  const [seen, setSeen] = useState(initial);
+  if (seen !== initial) {
+    setSeen(initial);
+    setResult(initial);
+  }
 
   useEffect(() => {
     if (first.current) {

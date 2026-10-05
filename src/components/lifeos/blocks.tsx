@@ -296,7 +296,7 @@ function BlockView({ block }: { block: ResultBlock }) {
         <div>
           <BlockTitle>{block.title}</BlockTitle>
           <div className="space-y-2">
-            {block.items.length ? block.items.map((it, i) => <InsightCard key={it.key} item={it} defaultOpen={block.items.length === 1 || (i === 0 && block.title === "Explanation")} />) : <p className="text-sm text-muted">Nothing found — that's good news.</p>}
+            {block.items.length ? block.items.map((it, i) => <InsightCard key={it.key} item={it} defaultOpen={block.items.length === 1 || (i === 0 && block.title === "Explanation")} />) : <p className="text-sm text-muted">Nothing found — that’s good news.</p>}
           </div>
         </div>
       );

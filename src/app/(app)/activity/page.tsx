@@ -11,9 +11,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/overla
 
 export const metadata: Metadata = { title: "AI activity" };
 
+const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000);
+
 export default async function ActivityPage() {
   const { db, user } = await getViewer();
-  const since = new Date(Date.now() - 30 * 86_400_000);
+  const since = daysAgo(30);
   const [runs, calls, approvals, [totals]] = await Promise.all([
     db.select().from(s.aiRuns).where(eq(s.aiRuns.userId, user.id)).orderBy(desc(s.aiRuns.createdAt)).limit(60),
     db.select().from(s.toolCalls).where(eq(s.toolCalls.userId, user.id)).orderBy(desc(s.toolCalls.createdAt)).limit(120),

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { AlertTriangle, CheckCircle2, CircleHelp, GitBranch, Layers, Loader2, Plus, RotateCcw, Scale, Sigma, Sparkles, Trash2 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip as RTooltip, XAxis, YAxis } from "recharts";
@@ -43,7 +43,12 @@ export function DecisionWorkspace({ decision, options, criteria, scores, analysi
   const [pending, start] = useTransition();
   const [weights, setWeights] = useState(() => Object.fromEntries(criteria.map((c) => [c.id, c.weight])));
   const weightTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  useEffect(() => setWeights(Object.fromEntries(criteria.map((c) => [c.id, c.weight]))), [criteria]);
+  // Re-sync local slider state when the server sends new criteria (render-time, no effect).
+  const [seenCriteria, setSeenCriteria] = useState(criteria);
+  if (seenCriteria !== criteria) {
+    setSeenCriteria(criteria);
+    setWeights(Object.fromEntries(criteria.map((c) => [c.id, c.weight])));
+  }
 
   async function patch(body: Record<string, unknown>, ok?: string) {
     try {
@@ -343,7 +348,11 @@ export function DecisionWorkspace({ decision, options, criteria, scores, analysi
 
 function ScoreCell({ value, low, high, provenance, rationale, disabled, onSave }: { value: number; low: number | null; high: number | null; provenance: Provenance; rationale: string | null; disabled: boolean; onSave: (v: number) => void }) {
   const [v, setV] = useState(String(value));
-  useEffect(() => setV(String(value)), [value]);
+  const [seen, setSeen] = useState(value);
+  if (seen !== value) {
+    setSeen(value);
+    setV(String(value));
+  }
   return (
     <div className="flex flex-col items-center gap-0.5" title={rationale ?? undefined}>
       <input

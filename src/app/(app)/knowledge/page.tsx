@@ -42,7 +42,7 @@ export default async function KnowledgePage(props: PageProps<"/knowledge">) {
   const unique = [...new Map(edges.map((e) => [e.id, e])).values()];
 
   const memories = w.memories
-    .map((m) => ({ id: m.id, content: m.content, category: m.category, source: m.source, confidence: m.confidence, importance: m.importance, status: m.status, createdAt: m.createdAt.toISOString(), lastVerifiedAt: m.lastVerifiedAt?.toISOString() ?? null, sourceRefType: m.sourceRefType, sourceRefId: m.sourceRefId }))
+    .map((m) => ({ id: m.id, content: m.content, category: m.category, source: m.source, confidence: m.confidence, importance: m.importance, status: m.status, createdAt: m.createdAt.toISOString(), lastVerifiedAt: m.lastVerifiedAt?.toISOString() ?? null, sourceRefType: m.sourceRefType, sourceRefId: m.sourceRefId, stale: !m.lastVerifiedAt || w.now.getTime() - m.lastVerifiedAt.getTime() > 90 * 86_400_000 }))
     .sort((a, b) => b.importance - a.importance || b.confidence - a.confidence);
 
   return (

@@ -23,7 +23,6 @@ export interface SeedDoc {
 
 export function demoDocuments(now = new Date()): SeedDoc[] {
   const L = (d: number) => longDate(d, now);
-  const U = (d: number) => ukDate(d, now);
   const I = (d: number) => isoDate(d, now);
   return [
     {

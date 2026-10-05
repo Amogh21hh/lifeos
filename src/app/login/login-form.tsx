@@ -43,7 +43,7 @@ export function LoginForm() {
       <Button variant="primary" size="lg" className="w-full" onClick={() => submit("demo")} disabled={!!busy}>
         {busy === "demo" ? <Loader2 className="animate-spin" /> : <Sparkles />} Enter the demo workspace
       </Button>
-      <p className="mt-2 text-center text-xs text-faint">A fictional finance graduate's world, pre-loaded and fully interactive.</p>
+      <p className="mt-2 text-center text-xs text-faint">A fictional finance graduate’s world, pre-loaded and fully interactive.</p>
 
       <div className="my-6 flex items-center gap-3 text-[11px] tracking-widest text-faint uppercase">
         <span className="h-px flex-1 bg-line" /> or use your account <span className="h-px flex-1 bg-line" />

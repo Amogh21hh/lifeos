@@ -157,7 +157,7 @@ export default async function OpportunityPage(props: PageProps<"/opportunities/[
               <Row label="Risk-adjusted value" value={annual !== null ? money(annual * p) : "—"} p="estimate" />
               <Row label="Effort" value={o.effortHours !== null ? `${o.effortHours} h` : "—"} p="estimate" />
               <Row label="Difficulty" value={o.difficulty ? `${o.difficulty}/5` : "—"} p="user_input" />
-              <p className="text-[11px] text-faint">Success rate = base rate for {o.type} × stage × fit. It's an explicit assumption for comparing routes, not a prediction.</p>
+              <p className="text-[11px] text-faint">Success rate = base rate for {o.type} × stage × fit. It’s an explicit assumption for comparing routes, not a prediction.</p>
             </dl>
           </Card>
 

@@ -26,7 +26,7 @@ export const GET = api({}, async ({ db, user, params }) => {
     skills: await pick(s.skills),
     decisions: await pick(s.decisions),
     memories: await pick(s.memories),
-    documents: (await db.select().from(s.documents).where(eq(s.documents.userId, uid))).map(({ storageKey: _k, ...d }) => d),
+    documents: (await db.select().from(s.documents).where(eq(s.documents.userId, uid))).map((d) => ({ ...d, storageKey: undefined })),
     documentFields: await pick(s.documentFields),
     transactions: await pick(s.transactions),
     accounts: await pick(s.accounts),
