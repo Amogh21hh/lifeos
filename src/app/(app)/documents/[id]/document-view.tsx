@@ -10,7 +10,7 @@ import { cn } from "@/lib/cn";
 import { Badge, Button, Card, CardHeader, Textarea } from "@/components/ui/primitives";
 import { EntityLink } from "@/components/lifeos/entity";
 import { ProvenanceTag } from "@/components/lifeos/provenance";
-import { commandHref } from "@/components/lifeos/insight-card";
+import { commandHref } from "@/lib/command";
 import type { EntityRef } from "@/lib/types";
 
 interface Field {

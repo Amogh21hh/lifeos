@@ -223,6 +223,20 @@ export const DecisionAgent = defineAgent({
   tools: ["create_decision", "analyze_decision", "search_memory", "finance_overview"],
   async run(ctx, { question }): Promise<AgentOutput> {
     const w = await ctx.world();
+    // Reuse an open decision that already frames the same question instead of creating a duplicate.
+    const qv = localEmbed(question);
+    const existing = w.decisions
+      .filter((d) => d.status !== "decided")
+      .map((d) => ({ d, sim: cosine(qv, localEmbed(`${d.title} ${d.question}`)) }))
+      .sort((a, b) => b.sim - a.sim)[0];
+    if (existing && existing.sim >= 0.62) {
+      ctx.note(`Matched existing decision (similarity ${existing.sim.toFixed(2)})`);
+      const analysis = await ctx.need<DecisionAnalysis>("analyze_decision", { decisionId: existing.d.id });
+      return {
+        summary: `You're already weighing this: “${existing.d.title}”. Here's the current state of that model rather than a duplicate.`,
+        blocks: [{ type: "decision", decisionId: existing.d.id, title: existing.d.title }, { type: "text", title: "What the model shows", body: analysis.summary }, { type: "text", title: "Questions that would materially change this", body: analysis.questions.map((q) => `• ${q.question} — ${q.why}`).join("\n") || "None identified yet." }],
+      };
+    }
     const heuristic = draftDecision(w, question);
     let draft: DecisionDraft = heuristic;
     if (ctx.llm) {

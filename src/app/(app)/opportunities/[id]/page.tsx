@@ -12,7 +12,7 @@ import { EntityLink } from "@/components/lifeos/entity";
 import { ProvenanceTag } from "@/components/lifeos/provenance";
 import { EntitySelect } from "@/components/lifeos/controls";
 import { QuickAsk } from "@/components/lifeos/quick-ask";
-import { commandHref } from "@/components/lifeos/insight-card";
+import { commandHref } from "@/lib/command";
 
 export const metadata: Metadata = { title: "Opportunity" };
 

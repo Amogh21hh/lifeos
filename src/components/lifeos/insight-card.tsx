@@ -7,6 +7,7 @@ import { AlertTriangle, ArrowUpRight, Check, ChevronDown, CircleAlert, Eye, Ligh
 import { toast } from "sonner";
 import type { Insight } from "@/lib/types";
 import { cn } from "@/lib/cn";
+import { commandHref } from "@/lib/command";
 import { apiFetch } from "@/lib/client-api";
 import { Button } from "@/components/ui/primitives";
 import { ConfidenceMeter, ProvenanceTag } from "./provenance";
@@ -18,10 +19,6 @@ const SEVERITY = {
   watch: { icon: Eye, cls: "text-accent", bar: "bg-accent", label: "Watch" },
   info: { icon: Lightbulb, cls: "text-muted", bar: "bg-line-strong", label: "Info" },
 } as const;
-
-export function commandHref(command: string) {
-  return `/command?q=${encodeURIComponent(command)}`;
-}
 
 /**
  * The universal explainable unit. Collapsed: conclusion. Expanded: evidence (with provenance),

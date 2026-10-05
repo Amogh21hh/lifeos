@@ -8,7 +8,7 @@ import { cn } from "@/lib/cn";
 import { Badge } from "@/components/ui/primitives";
 import { ProvenanceTag } from "@/components/lifeos/provenance";
 import { EntityIcon, EntityLink } from "@/components/lifeos/entity";
-import { commandHref } from "@/components/lifeos/insight-card";
+import { commandHref } from "@/lib/command";
 
 const SECTORS = ["goal", "project", "opportunity", "person", "skill", "document", "decision"] as const;
 const SECTOR_LABEL: Record<(typeof SECTORS)[number], string> = { goal: "Goals", project: "Projects", opportunity: "Opportunities", person: "People", skill: "Skills", document: "Documents", decision: "Decisions" };
