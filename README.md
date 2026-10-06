@@ -66,6 +66,7 @@ This runs LIFEOS with PostgreSQL 17 and pgvector.
 
 ## Documentation
 
+- [LIFEOS Guide](docs/LIFEOS-Guide.html): plain-language introduction for newcomers
 - [Architecture](docs/ARCHITECTURE.md): stack, data model, engines, request flow
 - [Agents & tools](docs/AGENTS_AND_TOOLS.md): every agent, every tool, permissions, approval flow
 - [Security](docs/SECURITY.md): threat model and controls

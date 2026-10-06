@@ -1,0 +1,531 @@
+<title>The LIFEOS Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Geist+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap">
+<style>
+/* Layout: a two-column manual — sticky contents rail on the left, a 68ch reading column on the right; stacks to one column on phones. Palette and faces mirror the LIFEOS app itself. */
+:root {
+  --bg: #f6f4ef;
+  --paper: #fffdf9;
+  --sunken: #eeebe4;
+  --line: #ddd8cc;
+  --fg: #1b1a17;
+  --muted: #5d594f;
+  --faint: #8d877a;
+  --accent: #0e7490;
+  --accent-soft: #0e74901a;
+  --signal: #b45309;
+  --signal-soft: #b453091a;
+  --danger: #b91c1c;
+  --p-fact: #047857;
+  --p-estimate: #b45309;
+  --p-assumption: #6d28d9;
+  --p-user: #0369a1;
+  --p-ai: #a21caf;
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body: "Geist", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #07090d; --paper: #0d1117; --sunken: #05070a; --line: #1f2731;
+    --fg: #e7ecf2; --muted: #a3afbd; --faint: #66727f;
+    --accent: #38e1ff; --accent-soft: #38e1ff17; --signal: #ffb547; --signal-soft: #ffb5471a; --danger: #ff5d6c;
+    --p-fact: #3ee08f; --p-estimate: #ffb547; --p-assumption: #b794ff; --p-user: #5cc8ff; --p-ai: #ff7ad9;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #07090d; --paper: #0d1117; --sunken: #05070a; --line: #1f2731;
+  --fg: #e7ecf2; --muted: #a3afbd; --faint: #66727f;
+  --accent: #38e1ff; --accent-soft: #38e1ff17; --signal: #ffb547; --signal-soft: #ffb5471a; --danger: #ff5d6c;
+  --p-fact: #3ee08f; --p-estimate: #ffb547; --p-assumption: #b794ff; --p-user: #5cc8ff; --p-ai: #ff7ad9;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.65;
+  padding-inline: 20px;
+  padding-block: 0 64px;
+}
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+
+.shell { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 56px; }
+@media (max-width: 900px) { .shell { grid-template-columns: minmax(0, 1fr); gap: 0; } .toc { display: none; } }
+
+/* Contents rail */
+.toc { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 40px 24px; }
+.toc .brand { display: flex; align-items: center; gap: 10px; margin-bottom: 28px; }
+.dot { position: relative; width: 26px; height: 26px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent-soft); flex: none; }
+.dot::before { content: ""; position: absolute; inset: 9px; border-radius: 50%; background: var(--accent); }
+.dot::after { content: ""; position: absolute; inset: 4px; border-radius: 50%; border: 1px solid var(--accent); opacity: .45; }
+.brand b { font-family: var(--font-mono); letter-spacing: .28em; font-size: 13px; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; counter-reset: toc; }
+.toc li a { display: flex; gap: 10px; padding: 5px 8px; border-radius: 6px; color: var(--muted); text-decoration: none; font-size: 14px; line-height: 1.35; }
+.toc li a::before { counter-increment: toc; content: counter(toc, decimal-leading-zero); font-family: var(--font-mono); font-size: 11px; color: var(--faint); padding-top: 2px; }
+.toc li a:hover { background: var(--sunken); color: var(--fg); }
+
+/* Reading column */
+main { min-width: 0; padding-top: 40px; }
+.prose { max-width: 68ch; }
+.eyebrow { font-family: var(--font-mono); font-size: 12px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); }
+h1 { font-family: var(--font-display); font-weight: 600; font-size: clamp(2.1rem, 5vw, 3.1rem); line-height: 1.08; letter-spacing: -0.01em; margin: 10px 0 16px; text-wrap: balance; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: clamp(1.5rem, 3vw, 1.9rem); line-height: 1.2; margin: 0 0 12px; text-wrap: balance; }
+h3 { font-size: 1.05rem; font-weight: 600; margin: 28px 0 6px; }
+p { margin: 0 0 14px; }
+.lede { font-size: 1.2rem; color: var(--muted); line-height: 1.55; }
+section { padding-block: 44px 8px; border-top: 1px solid var(--line); scroll-margin-top: 16px; }
+section:first-of-type { border-top: 0; padding-top: 8px; }
+.num { font-family: var(--font-mono); font-size: 12px; color: var(--faint); letter-spacing: .1em; display: block; margin-bottom: 6px; }
+ul.plain { padding-left: 20px; margin: 0 0 14px; }
+ul.plain li { margin-bottom: 6px; }
+code, kbd { font-family: var(--font-mono); font-size: .88em; }
+code { background: var(--sunken); padding: 1px 5px; border-radius: 4px; }
+kbd { border: 1px solid var(--line); border-bottom-width: 2px; background: var(--paper); border-radius: 5px; padding: 0 6px; white-space: nowrap; }
+pre.block { background: var(--sunken); border: 1px solid var(--line); border-radius: 10px; padding: 14px 16px; overflow-x: auto; font-family: var(--font-mono); font-size: 13.5px; line-height: 1.55; margin: 0 0 16px; }
+
+/* Callouts */
+.note { border-left: 3px solid var(--accent); background: var(--accent-soft); padding: 12px 16px; border-radius: 0 10px 10px 0; margin: 18px 0; }
+.note.warn { border-color: var(--signal); background: var(--signal-soft); }
+.note p:last-child { margin-bottom: 0; }
+
+/* Provenance tags, as in the app */
+.tag { display: inline-block; font-family: var(--font-mono); font-size: 10.5px; font-weight: 600; letter-spacing: .08em; padding: 1px 6px; border-radius: 4px; border: 1px solid currentColor; white-space: nowrap; vertical-align: 1px; }
+.t-fact { color: var(--p-fact); } .t-est { color: var(--p-estimate); } .t-asm { color: var(--p-assumption); } .t-user { color: var(--p-user); } .t-ai { color: var(--p-ai); }
+
+/* Tables */
+.tablewrap { overflow-x: auto; margin: 0 0 18px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+th { font-size: 11.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--faint); font-weight: 600; background: var(--sunken); }
+tr:last-child td { border-bottom: 0; }
+td:first-child { white-space: nowrap; font-weight: 600; }
+
+/* Screen tour */
+.screens { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr)); gap: 14px; margin: 18px 0 8px; }
+.screen { border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 16px 18px; min-width: 0; }
+.screen h4 { margin: 0 0 2px; font-size: 1rem; display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.screen h4 kbd { font-size: 11px; font-weight: 400; color: var(--muted); }
+.screen .what { color: var(--muted); font-size: 14.5px; margin: 6px 0 8px; }
+.screen .try { font-size: 13.5px; border-top: 1px dashed var(--line); padding-top: 8px; margin: 0; }
+.screen .try b { font-family: var(--font-mono); font-size: 11px; letter-spacing: .12em; color: var(--accent); text-transform: uppercase; margin-right: 6px; }
+
+/* Pipeline figure */
+.pipeline { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0; margin: 22px 0 24px; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--paper); }
+.stage { padding: 14px 14px 16px; border-right: 1px solid var(--line); min-width: 0; }
+.stage:last-child { border-right: 0; }
+.stage .k { font-family: var(--font-mono); font-size: 11px; color: var(--accent); letter-spacing: .12em; }
+.stage strong { display: block; margin: 4px 0; font-size: 15px; }
+.stage span { color: var(--muted); font-size: 13.5px; line-height: 1.45; display: block; }
+@media (max-width: 760px) { .pipeline { grid-template-columns: minmax(0, 1fr); } .stage { border-right: 0; border-bottom: 1px solid var(--line); } .stage:last-child { border-bottom: 0; } }
+
+/* Sample insight card */
+.sample { border: 1px solid var(--line); border-left: 3px solid var(--signal); border-radius: 10px; background: var(--paper); padding: 16px 18px; margin: 18px 0; }
+.sample .title { font-weight: 600; }
+.sample .reason { color: var(--muted); font-size: 14.5px; margin: 4px 0 12px; }
+.sample .lbl { font-family: var(--font-mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--faint); margin: 12px 0 6px; }
+.sample ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; font-size: 14.5px; }
+.sample li { display: flex; gap: 8px; align-items: baseline; }
+.factors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.factors div { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; background: var(--sunken); font-size: 13px; }
+.factors b { display: block; font-family: var(--font-mono); color: var(--accent); font-size: 15px; font-variant-numeric: tabular-nums; }
+@media (max-width: 560px) { .factors { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* Steps */
+ol.steps { list-style: none; counter-reset: s; padding: 0; margin: 0 0 16px; display: grid; gap: 12px; }
+ol.steps > li { counter-increment: s; display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 12px; }
+ol.steps > li::before { content: counter(s); width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--line); background: var(--paper); display: grid; place-items: center; font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+ol.steps p { margin: 4px 0 0; }
+
+details { border: 1px solid var(--line); border-radius: 10px; background: var(--paper); padding: 0 16px; margin-bottom: 10px; }
+summary { cursor: pointer; padding: 12px 0; font-weight: 600; list-style-position: outside; }
+details[open] summary { border-bottom: 1px dashed var(--line); margin-bottom: 10px; }
+details p:last-child { margin-bottom: 14px; }
+
+dl.gloss { display: grid; grid-template-columns: minmax(130px, 200px) minmax(0, 1fr); gap: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--paper); }
+dl.gloss dt, dl.gloss dd { margin: 0; padding: 10px 14px; border-bottom: 1px solid var(--line); }
+dl.gloss dt { font-weight: 600; background: var(--sunken); }
+dl.gloss dt:last-of-type, dl.gloss dd:last-of-type { border-bottom: 0; }
+@media (max-width: 560px) { dl.gloss { grid-template-columns: minmax(0, 1fr); } dl.gloss dt { border-bottom: 0; padding-bottom: 2px; } }
+
+.mermaidwrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--paper); padding: 12px; margin: 16px 0 20px; }
+footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--faint); font-size: 13.5px; }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+</style>
+
+<div class="shell">
+  <nav class="toc" aria-label="Contents">
+    <div class="brand"><span class="dot" aria-hidden="true"></span><b>LIFEOS</b></div>
+    <ol>
+      <li><a href="#what">What LIFEOS is</a></li>
+      <li><a href="#why">The problem it solves</a></li>
+      <li><a href="#how">How it works in one minute</a></li>
+      <li><a href="#ideas">Five ideas to understand</a></li>
+      <li><a href="#start">Getting started</a></li>
+      <li><a href="#tour">A tour of every screen</a></li>
+      <li><a href="#story">A morning with LIFEOS</a></li>
+      <li><a href="#reasoning">How the reasoning works</a></li>
+      <li><a href="#control">Safety, privacy and control</a></li>
+      <li><a href="#ai">Where AI is (and isn’t) used</a></li>
+      <li><a href="#tech">Under the hood</a></li>
+      <li><a href="#limits">What’s real and what’s simulated</a></li>
+      <li><a href="#faq">Questions people ask</a></li>
+      <li><a href="#glossary">Glossary</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <header class="prose">
+      <div class="eyebrow">Introductory guide · no prior knowledge needed</div>
+      <h1>LIFEOS, explained from the beginning</h1>
+      <p class="lede">LIFEOS is a personal “command centre”. It keeps one connected picture of your goals, projects, deadlines, people, documents, money and opportunities, and continuously works out what deserves your attention, what you’re overlooking and what your options are. It always shows its reasoning, and it never acts for you without asking.</p>
+    </header>
+
+    <section id="what" class="prose">
+      <span class="num">01</span>
+      <h2>What LIFEOS is</h2>
+      <p>Think of a very organised chief of staff who has read every email, every document and every to-do list you’ve ever handed them, and who sits down with you each morning to say: <em>“Here are the seven things that matter today, here’s why, and here’s what you may have missed.”</em></p>
+      <p>LIFEOS is software that plays that role. It combines several tools people usually keep separately:</p>
+      <ul class="plain">
+        <li>a <strong>planner</strong> (goals, projects, tasks, deadlines),</li>
+        <li>a <strong>personal CRM</strong> (people, conversations, promises you made),</li>
+        <li>an <strong>opportunity tracker</strong> (jobs, freelance work, courses, events),</li>
+        <li>a <strong>decision workspace</strong> (“Should I buy this car?”),</li>
+        <li>a <strong>document reader</strong> (contracts, invoices, job descriptions),</li>
+        <li>a <strong>money dashboard</strong> (cash, spending, runway),</li>
+        <li>and a <strong>searchable memory</strong> of everything above.</li>
+      </ul>
+      <p>The difference from a normal app is that LIFEOS doesn’t just store these things. It connects them and reasons over them, so it can notice, for example, that a contract you uploaded months ago has a notice deadline next week that isn’t on any to-do list.</p>
+    </section>
+
+    <section id="why" class="prose">
+      <span class="num">02</span>
+      <h2>The problem it solves</h2>
+      <p>Most people’s lives are spread across dozens of places: inboxes, calendars, notes apps, spreadsheets, PDFs, bank apps and their own heads. Each tool knows one slice. None of them can answer the questions that actually matter:</p>
+      <ul class="plain">
+        <li>Of everything competing for my attention, what has the most impact today?</li>
+        <li>What am I forgetting or neglecting?</li>
+        <li>Is my time going to the things I say are most important?</li>
+        <li>Which opportunities fit me, and what would make them more likely to work out?</li>
+        <li>If I make this choice, what am I trading off, and what don’t I know yet?</li>
+      </ul>
+      <p>Answering these needs all the slices at once. LIFEOS brings them together in one place and does that cross-checking continuously.</p>
+    </section>
+
+    <section id="how">
+      <div class="prose">
+        <span class="num">03</span>
+        <h2>How it works in one minute</h2>
+        <p>Everything in LIFEOS flows through the same five stages:</p>
+      </div>
+      <div class="pipeline" role="list">
+        <div class="stage" role="listitem"><div class="k">1 · COLLECT</div><strong>Your information</strong><span>Goals, tasks, people, documents, transactions, messages, typed in or synced from connected services.</span></div>
+        <div class="stage" role="listitem"><div class="k">2 · CONNECT</div><strong>A map of your world</strong><span>Everything is linked: this project proves that skill, which this job needs, at this company, where this person works.</span></div>
+        <div class="stage" role="listitem"><div class="k">3 · REASON</div><strong>Analysis engines</strong><span>Rank actions, detect blind spots, compare options, simulate “what if”, find opportunities.</span></div>
+        <div class="stage" role="listitem"><div class="k">4 · EXPLAIN</div><strong>Insights with evidence</strong><span>Every conclusion shows the records behind it, its assumptions, its confidence and what would change it.</span></div>
+        <div class="stage" role="listitem"><div class="k">5 · YOU DECIDE</div><strong>Approve or ignore</strong><span>Anything that would change data or send something is proposed first and only runs if you approve it.</span></div>
+      </div>
+      <div class="prose">
+        <p>Here is the same flow showing the main parts of the system:</p>
+      </div>
+      <div class="mermaidwrap">
+<pre class="mermaid">
+flowchart LR
+  A[You type, upload or sync] --> B[(One database of your world)]
+  B --> C[World snapshot]
+  C --> D1[Today briefing]
+  C --> D2[What am I missing?]
+  C --> D3[Decision engine]
+  C --> D4[Opportunity radar]
+  C --> D5[Simulator]
+  C --> D6[Search]
+  E[Command Center: ask in plain English] --> F[Specialist agent]
+  F --> G{Tool permission check}
+  G -- read --> C
+  G -- change / send / delete --> H[Approval queue]
+  H -- you approve --> B
+</pre>
+      </div>
+    </section>
+
+    <section id="ideas" class="prose">
+      <span class="num">04</span>
+      <h2>Five ideas to understand</h2>
+      <p>Once these five ideas make sense, the rest of LIFEOS follows from them.</p>
+
+      <h3>1. Everything is connected</h3>
+      <p>LIFEOS stores your information as a <strong>knowledge graph</strong>: items (goals, projects, people, skills, jobs, documents) joined by labelled links (“evidences”, “requires”, “works at”, “introduced”, “supports”). That’s how it can follow a chain such as <em>Python → credit-risk project → a job that needs Python → the recruiter at that company → a message you haven’t answered</em>.</p>
+
+      <h3>2. Every conclusion is an “insight” with its reasoning attached</h3>
+      <p>LIFEOS never just tells you something. Every recommendation is an <strong>insight</strong> you can open to see exactly why. Here is a real one from the demo:</p>
+      <div class="sample" aria-label="Example insight">
+        <div class="title">Reply to Sophie Laurent (Meridian Insurance)</div>
+        <div class="reason">Reason: Finance Talent Acquisition at Meridian Insurance contacted you 6 days ago and no response has been recorded.</div>
+        <div class="lbl">Evidence</div>
+        <ul>
+          <li><span class="tag t-fact">FACT</span> Email from Sophie Laurent on 27 Sept — needs reply</li>
+          <li><span class="tag t-fact">FACT</span> FP&amp;A Graduate Programme: second-round interview in 2 days</li>
+        </ul>
+        <div class="lbl">Why it ranks here</div>
+        <div class="factors">
+          <div>Impact<b>1.53</b></div><div>Urgency<b>2.56</b></div><div>Confidence<b>0.90</b></div><div>Effort<b>1.21</b></div>
+        </div>
+        <div class="lbl">Assumption · What would change this</div>
+        <ul>
+          <li><span class="tag t-asm">ASSUMPTION</span> No reply was sent from a channel LIFEOS can’t see.</li>
+          <li>→ A reply already sent from another channel.</li>
+        </ul>
+      </div>
+
+      <h3>3. Every fact says where it came from</h3>
+      <p>Each piece of evidence carries a coloured label, so you always know how much to trust it:</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Label</th><th>Means</th><th>Example</th></tr></thead>
+        <tbody>
+          <tr><td><span class="tag t-fact">FACT</span></td><td>Recorded directly in your data or a document.</td><td>“Applications close on 7 October” from a job description.</td></tr>
+          <tr><td><span class="tag t-est">ESTIMATE</span></td><td>Calculated from your data. An approximation.</td><td>“Runway ≈ 4.9 months”.</td></tr>
+          <tr><td><span class="tag t-asm">ASSUMPTION</span></td><td>Something the analysis takes as given and states openly.</td><td>“Success rate assumed ≈ 12% for a job application”.</td></tr>
+          <tr><td><span class="tag t-user">USER INPUT</span></td><td>Something you told LIFEOS.</td><td>“Minimum freelance rate £35/hour”.</td></tr>
+          <tr><td><span class="tag t-ai">AI INFERENCE</span></td><td>A pattern LIFEOS spotted that you should check.</td><td>“The Kaggle challenge doubles as progress on your credit project”.</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>4. You stay in control</h3>
+      <p>LIFEOS can <em>read</em> your information freely, but it can never <em>change, send, spend or delete</em> anything on its own. It works in four steps: <strong>propose → explain → ask you → only then do it</strong>. Pending actions wait in an approval queue (the bell icon, top right).</p>
+
+      <h3>5. Specialist “agents” do the work</h3>
+      <p>When you type a request in the Command Center, LIFEOS routes it to one of ten specialists, such as the Decision agent or the Project agent. Each one can only use the tools it’s been given. You can see every agent run, every tool it used and every record it touched on the <strong>AI activity</strong> page.</p>
+    </section>
+
+    <section id="start" class="prose">
+      <span class="num">05</span>
+      <h2>Getting started</h2>
+      <h3>Run it on your computer</h3>
+      <ol class="steps">
+        <li><div><strong>Install Node.js</strong> (version 20.9 or newer) from nodejs.org. Nothing else is required: no database server, no Docker, no API key.</div></li>
+        <li><div><strong>Install the app’s dependencies</strong>, once, from the <code>lifeos</code> folder:<pre class="block">npm install</pre></div></li>
+        <li><div><strong>Start it</strong>:<pre class="block">npm run dev</pre>The first start creates a small database inside the project folder and fills it with demo data. This takes about a second.</div></li>
+        <li><div><strong>Open</strong> <code>http://localhost:3000</code> in a browser and click <strong>Enter the demo workspace</strong>.</div></li>
+      </ol>
+      <div class="note"><p><strong>Two ways in.</strong> The <em>demo workspace</em> is a pre-filled, fictional person so you can explore immediately (sign-in: <code>demo@lifeos.app</code> / <code>lifeos-demo-2026</code>). <em>Create account</em> gives you an empty workspace for your own information.</p></div>
+      <h3>Moving around quickly</h3>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Keys</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><kbd>Ctrl</kbd> + <kbd>K</kbd> or <kbd>/</kbd></td><td>Opens the command palette: jump to any page or ask a question.</td></tr>
+          <tr><td><kbd>g</kbd> then a letter</td><td>Go to a page: <kbd>g</kbd><kbd>h</kbd> Home, <kbd>g</kbd><kbd>r</kbd> Radar, <kbd>g</kbd><kbd>m</kbd> Missing, <kbd>g</kbd><kbd>c</kbd> Command, <kbd>g</kbd><kbd>o</kbd> Opportunities, <kbd>g</kbd><kbd>p</kbd> Projects, <kbd>g</kbd><kbd>d</kbd> Decisions…</td></tr>
+          <tr><td><kbd>?</kbd></td><td>Shows the full list of shortcuts.</td></tr>
+        </tbody>
+      </table></div>
+      <p>The moon/sun icon switches between dark and light mode. On a phone, the main pages are in a bar at the bottom of the screen and the rest are under the ☰ menu.</p>
+    </section>
+
+    <section id="tour">
+      <div class="prose">
+        <span class="num">06</span>
+        <h2>A tour of every screen</h2>
+        <p>The left-hand menu is grouped into <strong>Intelligence</strong> (where LIFEOS thinks for you), <strong>World</strong> (your information) and <strong>Analysis</strong> (deeper tools).</p>
+      </div>
+      <div class="screens">
+        <article class="screen"><h4>Home · Today <kbd>g h</kbd></h4><p class="what">Your daily briefing: how many things matter today, the top five actions ranked by impact, blind spots you might be missing, a “system insight” about where your time actually went, the next 48 hours and upcoming deadlines.</p><p class="try"><b>Try</b>Open the first action to see its full evidence and score.</p></article>
+        <article class="screen"><h4>LIFEOS Radar <kbd>g r</kbd></h4><p class="what">A circular map with you at the centre and your goals, projects, opportunities, people, skills, documents and decisions around you. Pulsing amber dots are <em>potential opportunities</em> LIFEOS found in the connections.</p><p class="try"><b>Try</b>Click an amber dot: it shows why it exists, what supports it, what’s missing, what could unlock it and the next action.</p></article>
+        <article class="screen"><h4>What am I missing? <kbd>g m</kbd></h4><p class="what">Seventeen independent checks look for blind spots: applications never followed up, deadlines hidden in documents, relationships going cold, tasks you keep postponing, goals with no next step, and more. A check only reports something if it can point to the records.</p><p class="try"><b>Try</b>Mark an item “Not relevant” and it stays hidden.</p></article>
+        <article class="screen"><h4>Command Center <kbd>g c</kbd></h4><p class="what">Ask anything in plain English. LIFEOS picks the right specialist, runs it and shows the answer as cards, plans, charts or approval requests. A collapsible “reasoning trace” shows every step it took.</p><p class="try"><b>Try</b>“What should I focus on this week?” or “Draft a reply to Priya”.</p></article>
+        <article class="screen"><h4>Opportunities <kbd>g o</kbd></h4><p class="what">Jobs, freelance work, courses and events, grouped by stage (discovered, preparing, in play, closed), each with a <em>fit score</em> from your skills, evidence, contacts and constraints. The radar at the top turns a goal like “increase my income” into ranked routes.</p><p class="try"><b>Try</b>Open one to see which skills match, which are gaps, and the specific next action.</p></article>
+        <article class="screen"><h4>Projects <kbd>g p</kbd></h4><p class="what">Each project shows real progress (measured by remaining effort, not task count), blockers, deadlines and links. The <strong>Move this project forward</strong> button builds a plan that starts with the smallest useful next step.</p><p class="try"><b>Try</b>Run it on a blocked project: it finds the 20-minute task that unblocks everything.</p></article>
+        <article class="screen"><h4>Decisions <kbd>g d</kbd></h4><p class="what">Type a question like “Should I spend £500 on this course?” and LIFEOS builds a decision model: options, weighted criteria, scores with best/worst ranges, scenarios, sensitivity, unanswered questions and knock-on effects. It shows what drives the result; it never chooses for you.</p><p class="try"><b>Try</b>Drag a weight slider and watch which option leads.</p></article>
+        <article class="screen"><h4>Goals <kbd>g g</kbd></h4><p class="what">What everything else is measured against: priority 1–5, a measurable target, progress, and how much time you actually gave it in the last two weeks.</p><p class="try"><b>Try</b>Open your top goal to see which recommendations point to it.</p></article>
+        <article class="screen"><h4>People <kbd>g u</kbd></h4><p class="what">A personal contact book with relationship “warmth” (how long since you spoke, given how close you are), messages waiting on you and promises you made.</p><p class="try"><b>Try</b>Open a person to see everything connected to them.</p></article>
+        <article class="screen"><h4>Documents <kbd>g f</kbd></h4><p class="what">Upload a PDF, Word, Excel, CSV, text file or image. LIFEOS works out what it is (job description, invoice, contract…), pulls out the key fields and highlights exactly where in the document each one came from. You can correct or verify any field.</p><p class="try"><b>Try</b>Open the tenancy agreement and click “Last day to give notice”.</p></article>
+        <article class="screen"><h4>Finance <kbd>g $</kbd></h4><p class="what">Cash, runway (how many months your savings cover essentials), income versus spending, spending by category and recurring costs, plus money “what if” questions. It describes your data; it doesn’t give investment advice.</p><p class="try"><b>Try</b>“What happens if I spend £300 on a course?”</p></article>
+        <article class="screen"><h4>Knowledge <kbd>g k</kbd></h4><p class="what">Four tabs: <strong>Search</strong> everything (each result says why it matched), <strong>Memory</strong> (what LIFEOS remembers about you, with its source; edit, dispute or delete), an interactive <strong>Graph</strong>, and <strong>Notes &amp; ideas</strong>.</p><p class="try"><b>Try</b>Search “Which commitments are currently overdue?”</p></article>
+        <article class="screen"><h4>Simulator <kbd>g s</kbd></h4><p class="what">“What happens if…” for extra hours, stopping a project, spending or earning money, delaying a deadline or learning a skill. Every assumption is a slider, so you can see what drives the answer.</p><p class="try"><b>Try</b>“What happens if I learn SQL?”, then change the hours-per-week slider.</p></article>
+        <article class="screen"><h4>Weekly report <kbd>g w</kbd></h4><p class="what">A one-page review of the last seven days: wins, progress per goal, stalled projects, missed promises, new opportunities, upcoming deadlines, money in and out, people to follow up, detected patterns and recommended focus.</p><p class="try"><b>Try</b>Read “Recommended focus”: one item per goal, each with its reason.</p></article>
+        <article class="screen"><h4>AI activity <kbd>g a</kbd></h4><p class="what">Full transparency: every agent run, every tool call (with its permission level and the records it touched), timing and cost, and the approval queue where you approve or reject proposed actions.</p><p class="try"><b>Try</b>Open the Approvals tab.</p></article>
+        <article class="screen"><h4>Settings</h4><p class="what">Your profile; how the reasoning behaves (focus hours, follow-up and neglect thresholds); whether to use an AI model or stay fully local; connected services; the list of agents and tools; data export; and resetting the demo.</p><p class="try"><b>Try</b>Connect the “Job boards” integration and click Sync.</p></article>
+      </div>
+    </section>
+
+    <section id="story" class="prose">
+      <span class="num">07</span>
+      <h2>A morning with LIFEOS</h2>
+      <p>The demo follows <strong>Amogh</strong>, a fictional MSc Finance graduate in London on a two-year Graduate visa. He wants a credit-analyst or FP&amp;A job with an employer that can sponsor his visa. He also freelances, studies for the CFA Level I exam and is building a portfolio. His information is deliberately messy, like real life. Here’s what LIFEOS surfaces when he opens it:</p>
+      <ol class="steps">
+        <li><div><strong>“You have 7 meaningful things competing for your attention.”</strong><p>The top action: confirm tomorrow’s Meridian interview, because the recruiter wrote 6 days ago and hasn’t had a reply. Then reply to Priya at Halcyon Bank (applications close in 2 days), then finish the interview case-study prep.</p></div></li>
+        <li><div><strong>A deadline hidden in a contract.</strong><p>His tenancy agreement says he must give two months’ notice before the lease ends. LIFEOS worked out the last day to give notice and flagged that it isn’t on any to-do list.</p></div></li>
+        <li><div><strong>Time going to the wrong place.</strong><p>“Your highest-priority goal (landing a sponsored role) received only 4% of your logged time this week; freelance work took 36%.”</p></div></li>
+        <li><div><strong>An opportunity hiding in plain sight.</strong><p>On the Radar, an amber dot: <em>“Use your Credit-risk model as evidence for the Halcyon Bank application.”</em> The project demonstrates exactly the Python and credit-analysis skills the job asks for, but it isn’t mentioned anywhere in the application, and it’s blocked by a 20-minute dataset download.</p></div></li>
+        <li><div><strong>A referral path.</strong><p>An old classmate, Tom, offered to refer him at Brightwater, but they haven’t spoken in 74 days, and Amogh owes his friend Ravi an introduction to Tom. LIFEOS suggests one message that does both.</p></div></li>
+        <li><div><strong>He asks: “Should I spend £500 on a modelling bootcamp?”</strong><p>LIFEOS builds the model. With his current priorities, “defer until after the CFA exam” leads. The result flips if cash matters much more than it currently weighs, and the open question that matters most is whether employers value the certificate. The choice stays his.</p></div></li>
+        <li><div><strong>He types “Draft a reply to Priya”.</strong><p>LIFEOS writes a reply based on her actual message and the deadline, then puts “Send email to Priya Shah” in the approval queue. Nothing is sent until he clicks Approve.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="reasoning" class="prose">
+      <span class="num">08</span>
+      <h2>How the reasoning works</h2>
+      <p>None of this needs an AI model. The core reasoning is ordinary, transparent arithmetic and rules applied to your data, which is why every number can be explained.</p>
+
+      <h3>Ranking actions (“leverage”)</h3>
+      <pre class="block">leverage = impact × urgency × confidence ÷ effort</pre>
+      <ul class="plain">
+        <li><strong>Impact</strong>: how important the goal it serves is (priority 1–5), plus bonuses for how well an opportunity fits and how valuable it is.</li>
+        <li><strong>Urgency</strong>: rises steeply as a deadline approaches and is highest when something is overdue.</li>
+        <li><strong>Confidence</strong>: how complete the underlying information is.</li>
+        <li><strong>Effort</strong>: longer tasks count against the score, but gently, so important deep work isn’t buried under quick chores.</li>
+      </ul>
+
+      <h3>Finding blind spots</h3>
+      <p>Seventeen separate checks each look for one kind of problem, such as “an application older than 5 days with no follow-up” or “a strong relationship with no contact for longer than is normal for that tie”. They run independently, and an empty world produces no warnings at all, because nothing is ever invented. You can tune the thresholds (for example, after how many days a goal counts as neglected) in Settings.</p>
+
+      <h3>Fit between you and an opportunity</h3>
+      <p>LIFEOS compares the skills an opportunity needs with your skill levels. It adds credit when a project proves a skill and when you know someone there. It deducts when there’s a hard blocker, such as an employer that states it can’t sponsor visas when you need sponsorship.</p>
+
+      <h3>Decisions</h3>
+      <p>Each option gets a score from 0 to 10 on each criterion, with a pessimistic and an optimistic value. The criteria have weights reflecting what matters to you. LIFEOS then:</p>
+      <ul class="plain">
+        <li>adds up the weighted scores for the pessimistic, normal and optimistic cases,</li>
+        <li>tests each weight from 0 to double its value to find where the leading option would change,</li>
+        <li>checks whether any single uncertain score could flip the result,</li>
+        <li>and pulls in lessons from your past decisions.</li>
+      </ul>
+
+      <h3>Search</h3>
+      <p>Search combines four signals:</p>
+      <ul class="plain">
+        <li>matching words,</li>
+        <li>matching meaning (so “income” also finds “salary”),</li>
+        <li>filters understood from your question (“overdue”, “documents”, “decided”),</li>
+        <li>and the knowledge graph (“connected to Priya”).</li>
+      </ul>
+      <p>Each result lists which signals matched.</p>
+
+      <h3>Simulations</h3>
+      <p>Each “what if” is a small model built from your own history, such as your actual hours per project over the last weeks or your average monthly spending. Every assumption is shown as a slider and every output is labelled an estimate.</p>
+    </section>
+
+    <section id="control" class="prose">
+      <span class="num">09</span>
+      <h2>Safety, privacy and control</h2>
+      <div class="tablewrap"><table>
+        <thead><tr><th>The AI can…</th><th>The AI can never, without your approval…</th></tr></thead>
+        <tbody>
+          <tr><td style="white-space:normal;font-weight:400">Read and analyse your information, rank, search, simulate, draft text, propose actions.</td><td>Create or change records, send a message, search the web, delete anything, spend money, or make commitments on your behalf.</td></tr>
+        </tbody>
+      </table></div>
+      <ul class="plain">
+        <li><strong>Every action is logged.</strong> The AI activity page shows each tool call, its permission level and which records it touched.</li>
+        <li><strong>Approve once, run once.</strong> An approval runs exactly the proposed action, one time.</li>
+        <li><strong>No hidden profiling.</strong> Memories have a visible source, confidence and “last verified” date. AI-suggested memories need your approval, and you can edit, dispute or delete any of them.</li>
+        <li><strong>Local-only mode.</strong> In Settings you can stop LIFEOS from ever sending data to an AI provider. Everything keeps working.</li>
+        <li><strong>Your data is yours.</strong> Settings → Export downloads everything as one file.</li>
+        <li><strong>Security basics are covered:</strong> hashed passwords, secure sessions, protection against cross-site attacks, rate limits, strict checks on uploaded files (they are never executed) and API keys kept on the server only.</li>
+      </ul>
+    </section>
+
+    <section id="ai" class="prose">
+      <span class="num">10</span>
+      <h2>Where AI is (and isn’t) used</h2>
+      <p>LIFEOS works completely <strong>without</strong> an AI model. That mode is called the <em>local reasoning engine</em>, and it’s what the demo uses by default.</p>
+      <p>If you add an AI key (Claude from Anthropic, or any OpenAI-compatible service), the model helps with language tasks only:</p>
+      <ul class="plain">
+        <li>understanding unusual requests in the Command Center,</li>
+        <li>reading messy documents more accurately (it must quote the exact text for every field, and LIFEOS checks the quote exists in the document),</li>
+        <li>drafting the options and criteria for a new decision,</li>
+        <li>and writing short summaries and message drafts using only facts LIFEOS gives it.</li>
+      </ul>
+      <p>The ranking, blind-spot checks, decision maths, simulations and search are always done by LIFEOS’s own transparent logic.</p>
+      <div class="note"><p>If an AI call fails or is unavailable, LIFEOS quietly falls back to its own logic and marks the run as “partial” on the AI activity page. It never invents an answer.</p></div>
+    </section>
+
+    <section id="tech" class="prose">
+      <span class="num">11</span>
+      <h2>Under the hood</h2>
+      <p>For technical readers. Everyone else can skip this section.</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Part</th><th>Technology</th></tr></thead>
+        <tbody>
+          <tr><td>Web app</td><td style="white-space:normal">Next.js 16 with React 19 and TypeScript; Tailwind CSS; Radix UI components; Recharts and React Flow for charts and graphs.</td></tr>
+          <tr><td>Database</td><td style="white-space:normal">PostgreSQL through Drizzle ORM. By default an embedded Postgres (PGlite) stored in the project folder; set <code>DATABASE_URL</code> to use a normal PostgreSQL server.</td></tr>
+          <tr><td>Search</td><td style="white-space:normal">Postgres full-text search plus pgvector for meaning-based search, combined with graph traversal.</td></tr>
+          <tr><td>Reasoning</td><td style="white-space:normal">Pure functions over a snapshot of your world (the “World”), each producing explainable insights.</td></tr>
+          <tr><td>Agents</td><td style="white-space:normal">10 agents, 31 tools; a central registry enforces each agent’s allowed tools, validates inputs and outputs, routes risky actions to approval and logs everything.</td></tr>
+          <tr><td>Validation</td><td style="white-space:normal">Zod schemas on every API request, tool, agent and AI response.</td></tr>
+          <tr><td>Tests</td><td style="white-space:normal">73 automated unit/integration tests (Vitest) and 7 end-to-end browser tests (Playwright, desktop and mobile).</td></tr>
+        </tbody>
+      </table></div>
+      <p>The ten agents and what they are responsible for:</p>
+      <div class="tablewrap"><table>
+        <thead><tr><th>Agent</th><th>Responsible for</th></tr></thead>
+        <tbody>
+          <tr><td>Research</td><td style="white-space:normal">Searching and connecting information; web search only with approval.</td></tr>
+          <tr><td>Planner</td><td style="white-space:normal">Weekly focus plans, the weekly report, time and project simulations, deadlines.</td></tr>
+          <tr><td>Document</td><td style="white-space:normal">Reading uploads; turning documents into projects and tasks (with approval).</td></tr>
+          <tr><td>Decision</td><td style="white-space:normal">Building and stress-testing decision models.</td></tr>
+          <tr><td>Opportunity</td><td style="white-space:normal">Turning an objective into ranked routes; analysing fit.</td></tr>
+          <tr><td>Memory</td><td style="white-space:normal">Recalling what LIFEOS knows and proposing new memories.</td></tr>
+          <tr><td>Project</td><td style="white-space:normal">Autopilot plans, stalled projects, proposing tasks and links.</td></tr>
+          <tr><td>Finance</td><td style="white-space:normal">Your money position and money “what ifs”.</td></tr>
+          <tr><td>Reflection</td><td style="white-space:normal">Blind spots, what changed, explaining recommendations, missing information.</td></tr>
+          <tr><td>Outreach</td><td style="white-space:normal">Drafting messages and proposing (never doing) the send.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Detailed technical documents live in the project’s <code>docs</code> folder: <code>ARCHITECTURE.md</code>, <code>AGENTS_AND_TOOLS.md</code>, <code>SECURITY.md</code>, <code>ROADMAP.md</code> and <code>TESTING.md</code>.</p>
+    </section>
+
+    <section id="limits" class="prose">
+      <span class="num">12</span>
+      <h2>What’s real and what’s simulated</h2>
+      <ul class="plain">
+        <li><strong>Real:</strong> everything you type or upload, all the analysis, search, decisions, simulations, approvals, memory and the activity log.</li>
+        <li><strong>Simulated:</strong> the connected services (email, calendar, banking, job boards, LinkedIn, GitHub, messaging). They use built-in sample data so you can see how syncing works. Connecting real accounts (Gmail, Google Calendar, Open Banking and so on) is the next stage on the roadmap; the app is designed so each one can be plugged in without changing anything else.</li>
+        <li><strong>Fictional:</strong> the demo person, the companies and the people in the demo workspace.</li>
+        <li><strong>Not yet included:</strong> background processing while the app is closed, notifications, two-factor sign-in, and reading text from scanned images without an AI key.</li>
+      </ul>
+      <div class="note warn"><p>Estimates such as success rates, runway or “weeks to finish” are aids to thinking, not predictions. LIFEOS labels them as estimates or assumptions for exactly that reason.</p></div>
+    </section>
+
+    <section id="faq" class="prose">
+      <span class="num">13</span>
+      <h2>Questions people ask</h2>
+      <details><summary>Does LIFEOS decide things for me?</summary><p>No. It ranks, highlights and models. For decisions it shows which option leads under your stated priorities and how fragile that is, but you choose. Anything that would change data or contact someone waits for your approval.</p></details>
+      <details><summary>Do I need an AI subscription or API key?</summary><p>No. Everything works with the built-in local reasoning engine. An AI key only improves language tasks such as reading messy documents and understanding unusual requests.</p></details>
+      <details><summary>Where is my data stored?</summary><p>On your own computer, in a database inside the project folder (or in your own PostgreSQL server if you configure one). Uploaded files are stored alongside it. Nothing is sent anywhere unless you add an AI key and leave “local only” switched off.</p></details>
+      <details><summary>What if LIFEOS gets something wrong?</summary><p>Every insight shows its evidence, so you can see why it’s wrong. You can mark an insight “Not relevant”, correct a document field (your correction is kept even if the document is re-read), and edit, dispute or delete memories.</p></details>
+      <details><summary>Why does it say “7 meaningful things”? Where does that number come from?</summary><p>It’s the number of candidate actions whose leverage score passes a threshold. Open any of them to see the four factors behind its score.</p></details>
+      <details><summary>How do I get the demo back to its original state?</summary><p>Settings → Your data → Reset demo workspace. This only works on the demo account.</p></details>
+      <details><summary>It feels slow. What can I do?</summary><p>The first visit to each page is slower while the development server prepares it. LIFEOS also needs a reasonable amount of free memory: close heavy apps (for example WSL/Docker, many browser tabs) or run a production build with <code>npm run build</code> then <code>npm start</code>.</p></details>
+      <details><summary>Can I use it on my phone?</summary><p>Yes. The layout adapts to phone screens, with the main sections in a bottom bar. Open the app’s address from your phone on the same network, or deploy it to a server.</p></details>
+    </section>
+
+    <section id="glossary" class="prose">
+      <span class="num">14</span>
+      <h2>Glossary</h2>
+      <dl class="gloss">
+        <dt>Agent</dt><dd>A specialist part of LIFEOS (e.g. the Decision agent) that handles one kind of request using a fixed set of tools.</dd>
+        <dt>Approval queue</dt><dd>The list of actions LIFEOS has proposed but not done. Found under the bell icon and on the AI activity page.</dd>
+        <dt>Blind spot</dt><dd>Something you may be overlooking, found by one of the “What am I missing?” checks and backed by records.</dd>
+        <dt>Confidence</dt><dd>How sure LIFEOS is about an insight (low / medium / high), based on how complete the information is.</dd>
+        <dt>Evidence</dt><dd>The specific records behind an insight, each labelled with where it came from.</dd>
+        <dt>Fit score</dt><dd>How well an opportunity matches you: skills, proof of skills, contacts and constraints such as visas.</dd>
+        <dt>Insight</dt><dd>Any conclusion LIFEOS shows you, always with its reasoning attached.</dd>
+        <dt>Knowledge graph</dt><dd>The web of links between your goals, projects, people, skills, opportunities and documents.</dd>
+        <dt>Leverage</dt><dd>The score used to rank actions: impact × urgency × confidence ÷ effort.</dd>
+        <dt>Local reasoning engine</dt><dd>LIFEOS’s built-in logic, which works with no AI model at all.</dd>
+        <dt>Potential opportunity</dt><dd>An opportunity LIFEOS inferred from connections in your data (the amber dots on the Radar).</dd>
+        <dt>Provenance</dt><dd>Where a fact came from: FACT, ESTIMATE, ASSUMPTION, USER INPUT or AI INFERENCE.</dd>
+        <dt>Runway</dt><dd>How many months your available cash would cover your essential costs.</dd>
+        <dt>Sensitivity</dt><dd>How much a decision’s outcome depends on a particular weight or score.</dd>
+        <dt>Smallest useful next action</dt><dd>The first step of a project plan: concrete, usually under 30 minutes, and chosen because it unblocks or advances the most.</dd>
+        <dt>Tool</dt><dd>A single capability an agent can use (search, create a task, send a message), each with a permission level: read, write, external or destructive.</dd>
+      </dl>
+      <footer>The LIFEOS Guide · written for the version in this repository (October 2026). For setup details see <code>README.md</code>; for technical depth see the <code>docs</code> folder.</footer>
+    </section>
+  </main>
+</div>
