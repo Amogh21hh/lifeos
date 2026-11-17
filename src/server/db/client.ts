@@ -26,7 +26,12 @@ interface DbState {
   ready: Promise<void>;
   driver: "pglite" | "postgres";
   close: () => Promise<void>;
+  /** Runs fn while holding a cross-process lock (Postgres advisory lock); a no-op wrapper for PGlite. */
+  exclusive: <T>(fn: () => Promise<T>) => Promise<T>;
 }
+
+/** Arbitrary constant key for pg_advisory_lock; serialises migrate + seed across serverless instances. */
+const BOOTSTRAP_LOCK = 7_300_417;
 
 const g = globalThis as unknown as { __lifeosDb?: DbState };
 
@@ -39,12 +44,27 @@ function create(): DbState {
   if (url && /^postgres(ql)?:\/\//.test(url)) {
     const pool = new Pool({ connectionString: url, max: Number(process.env.DATABASE_POOL_SIZE ?? 10) });
     const db = drizzlePg(pool, { schema }) as unknown as DB;
-    const ready = (async () => {
+    // Several instances can cold-start at once against the same database (serverless); hold a
+    // session-level advisory lock on one dedicated connection so only one migrates or seeds at a time.
+    const exclusive = async <T,>(fn: () => Promise<T>): Promise<T> => {
+      const lock = await pool.connect();
+      try {
+        await lock.query("SELECT pg_advisory_lock($1)", [BOOTSTRAP_LOCK]);
+        try {
+          return await fn();
+        } finally {
+          await lock.query("SELECT pg_advisory_unlock($1)", [BOOTSTRAP_LOCK]).catch(() => undefined);
+        }
+      } finally {
+        lock.release();
+      }
+    };
+    const ready = exclusive(async () => {
       await pool.query("CREATE EXTENSION IF NOT EXISTS vector");
       await migratePg(db as never, { migrationsFolder: migrationsFolder() });
       logger.info("db.ready", { driver: "postgres" });
-    })();
-    return { db, ready, driver: "postgres", close: () => pool.end() };
+    });
+    return { db, ready, driver: "postgres", close: () => pool.end(), exclusive };
   }
 
   const dataDir = process.env.PGLITE_DIR ?? path.join(process.cwd(), ".data", "pglite");
@@ -58,7 +78,7 @@ function create(): DbState {
     await migratePglite(db, { migrationsFolder: migrationsFolder() });
     logger.info("db.ready", { driver: "pglite", dataDir });
   })();
-  return { db, ready, driver: "pglite", close: () => client.close() };
+  return { db, ready, driver: "pglite", close: () => client.close(), exclusive: (fn) => fn() };
 }
 
 function state(): DbState {
@@ -76,7 +96,7 @@ export async function getDb(): Promise<DB> {
     bootstrapped = (async () => {
       if (process.env.LIFEOS_AUTO_SEED === "false") return;
       const { ensureDemoWorkspace } = await import("./seed");
-      await ensureDemoWorkspace(s.db);
+      await s.exclusive(() => ensureDemoWorkspace(s.db));
     })().catch((err) => {
       bootstrapped = null;
       throw err;

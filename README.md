@@ -52,6 +52,24 @@ docker compose up --build
 
 This runs LIFEOS with PostgreSQL 17 and pgvector.
 
+### Deploying to Vercel
+
+The live demo runs on Vercel with a Neon Postgres database (pgvector is built in). Serverless functions have no durable disk, so uploaded files are stored in Postgres (`STORAGE_DRIVER=database`). On the first request, LIFEOS applies migrations and seeds the demo workspace under a Postgres advisory lock, so parallel cold starts can't double-seed.
+
+1. Import the repo in Vercel (framework: Next.js; `vercel.json` pins functions to London, `lhr1`).
+2. Add a Neon database from **Storage → Create Database** (choose the London region) and connect it to the project. This sets `DATABASE_URL`.
+3. Set these environment variables in the Vercel project:
+
+| Variable | Value |
+|---|---|
+| `STORAGE_DRIVER` | `database` |
+| `DATABASE_POOL_SIZE` | `5` |
+| `MAX_UPLOAD_MB` | `4` (Vercel's request body limit is 4.5 MB) |
+| `LIFEOS_ALLOW_SIGNUP` | `false` for a public demo-only site |
+| `ANTHROPIC_API_KEY` | optional |
+
+Secrets belong only in Vercel's environment variables. Never commit `.env` files.
+
 ## Scripts
 
 | Script | Purpose |

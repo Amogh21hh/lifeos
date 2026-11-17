@@ -6,9 +6,10 @@
 npm test
 ```
 
-Runs on an **in-memory PGlite** database seeded with the full demo world. No dev data, network or AI provider is touched. 73 tests across three files:
+Runs on an **in-memory PGlite** database seeded with the full demo world. No dev data, network or AI provider is touched. 75 tests across four files:
 
 - `tests/unit/extract.test.ts`: date parsing, document classification for all demo document types, JD/invoice/contract extraction, derived notice deadlines, the guarantee that every source span points at real text, and money/skill helpers.
+- `tests/unit/storage.test.ts`: the database storage driver used on serverless hosts (round-trip, overwrite, delete, key validation).
 - `tests/unit/security.test.ts`: password hashing, upload validation (spoofed extensions, unknown types, empty files, binary disguised as text), filename sanitisation, rate limiting, LLM schema sanitising.
 - `tests/unit/engine.test.ts`:
   - demo data volumes

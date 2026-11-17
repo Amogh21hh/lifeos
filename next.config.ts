@@ -20,6 +20,8 @@ const csp = [
 const nextConfig: NextConfig = {
   serverExternalPackages: ["@electric-sql/pglite", "@electric-sql/pglite-pgvector", "pg", "exceljs", "mammoth", "unpdf"],
   poweredByHeader: false,
+  // Migrations are read from ./drizzle at runtime (first request); make sure serverless bundles carry them.
+  outputFileTracingIncludes: { "/**": ["./drizzle/**/*"] },
   async headers() {
     return [
       {

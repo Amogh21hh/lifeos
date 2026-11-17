@@ -48,3 +48,4 @@ scratch-*
 /playwright-report
 
 !.env.example
+/.backups

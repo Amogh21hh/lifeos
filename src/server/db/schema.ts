@@ -797,3 +797,24 @@ export const weeklyReports = pgTable(
   },
   (t) => [uniqueIndex("weekly_user_week_idx").on(t.userId, t.weekStart)],
 );
+
+const bytea = customType<{ data: Buffer; driverData: Buffer | Uint8Array }>({
+  dataType() {
+    return "bytea";
+  },
+  fromDriver(value) {
+    return Buffer.isBuffer(value) ? value : Buffer.from(value);
+  },
+});
+
+/**
+ * Uploaded file bodies, used when STORAGE_DRIVER=database. Serverless hosts (e.g. Vercel) have no
+ * durable local disk, so files live next to the rest of the data. Keys match documents.storage_key.
+ */
+export const storedFiles = pgTable("stored_files", {
+  key: text("key").primaryKey(),
+  contentType: text("content_type").notNull(),
+  sizeBytes: integer("size_bytes").notNull(),
+  content: bytea("content").notNull(),
+  createdAt: createdAt(),
+});
