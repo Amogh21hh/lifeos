@@ -44,18 +44,22 @@ function create(): DbState {
   if (url && /^postgres(ql)?:\/\//.test(url)) {
     const pool = new Pool({ connectionString: url, max: Number(process.env.DATABASE_POOL_SIZE ?? 10) });
     const db = drizzlePg(pool, { schema }) as unknown as DB;
-    // Several instances can cold-start at once against the same database (serverless); hold a
-    // session-level advisory lock on one dedicated connection so only one migrates or seeds at a time.
+    // Several instances can cold-start at once against the same database (serverless); hold an
+    // advisory lock so only one migrates or seeds at a time. It is transaction-scoped on purpose:
+    // behind a transaction-mode pooler (Neon, PgBouncer) a session lock could stay stuck on a server
+    // connection we no longer own, while an open transaction keeps us pinned to one backend and the
+    // lock is released automatically on COMMIT/ROLLBACK, even if this instance dies.
     const exclusive = async <T,>(fn: () => Promise<T>): Promise<T> => {
       const lock = await pool.connect();
+      let ok = false;
       try {
-        await lock.query("SELECT pg_advisory_lock($1)", [BOOTSTRAP_LOCK]);
-        try {
-          return await fn();
-        } finally {
-          await lock.query("SELECT pg_advisory_unlock($1)", [BOOTSTRAP_LOCK]).catch(() => undefined);
-        }
+        await lock.query("BEGIN");
+        await lock.query("SELECT pg_advisory_xact_lock($1)", [BOOTSTRAP_LOCK]);
+        const result = await fn();
+        ok = true;
+        return result;
       } finally {
+        await lock.query(ok ? "COMMIT" : "ROLLBACK").catch(() => undefined);
         lock.release();
       }
     };
