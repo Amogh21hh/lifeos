@@ -1,5 +1,7 @@
 # LIFEOS: Personal Opportunity & Decision Operating System
 
+**Live demo:** https://lifeos-amogh21hh.vercel.app (click **Enter the demo workspace**; all data is fictional and shared by every visitor).
+
 LIFEOS turns your goals, commitments, documents, opportunities, skills, money, projects and deadlines into one model of your world, then reasons over it continuously:
 
 - **TODAY** ranks your highest-leverage actions and explains each one: impact × urgency × confidence ÷ effort.
